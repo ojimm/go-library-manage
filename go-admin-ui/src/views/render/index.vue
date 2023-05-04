@@ -2,39 +2,45 @@
   <BasicLayout>
     <template #wrapper>
       <el-card class="box-card">
-        <el-form
-          ref="queryForm"
-          :model="queryParams"
-          :inline="true"
-          label-width="68px"
-        >
+        <el-form ref="queryForm" :model="queryParams" :inline="true">
           <el-form-item
-            label="图书名称"
+            label="读者用户名"
             prop="name"
           ><el-input
             v-model="queryParams.name"
-            placeholder="请输入图书名称"
+            placeholder="请输入读者用户名"
             clearable
             size="small"
             @keyup.enter.native="handleQuery"
           />
           </el-form-item>
           <el-form-item
-            label="书籍类别"
-            prop="cid"
+            label="性别"
+            prop="gender"
           ><el-select
-            v-model="queryParams.cid"
-            placeholder="请选择"
+            v-model="queryParams.gender"
+            placeholder="性别"
             clearable
             size="small"
           >
             <el-option
-              v-for="dict in cidOptions"
-              :key="dict.key"
-              :label="dict.value"
-              :value="dict.key"
+              v-for="dict in genderOptions"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
+          </el-form-item>
+          <el-form-item
+            label="手机号"
+            prop="phone"
+          ><el-input
+            v-model="queryParams.phone"
+            placeholder="请输入手机号"
+            clearable
+            size="small"
+            @keyup.enter.native="handleQuery"
+          />
           </el-form-item>
 
           <el-form-item>
@@ -50,19 +56,19 @@
               @click="resetQuery"
             >重置</el-button>
             <el-button
-              v-permisaction="['admin:book:add']"
+              v-permisaction="['admin:render:add']"
               type="primary"
               icon="el-icon-plus"
               size="mini"
               @click="handleAdd"
-            >新增
+            >新增读者
             </el-button>
           </el-form-item>
         </el-form>
 
         <el-table
           v-loading="loading"
-          :data="bookList"
+          :data="renderList"
           @selection-change="handleSelectionChange"
         >
           <el-table-column
@@ -70,61 +76,35 @@
             width="55"
             align="center"
           /><el-table-column
-            label="图书名称"
+            label="读者编号"
+            align="center"
+            prop="renderId"
+            :show-overflow-tooltip="true"
+          /><el-table-column
+            label="读者用户名"
             align="center"
             prop="name"
             :show-overflow-tooltip="true"
           /><el-table-column
-            label="作者"
+            label="性别"
             align="center"
-            prop="author"
-            :show-overflow-tooltip="true"
-          /><el-table-column
-            label="出版社"
-            align="center"
-            prop="publish"
-            :show-overflow-tooltip="true"
-          /><el-table-column
-            label="ISBN"
-            align="center"
-            prop="isbn"
-            :show-overflow-tooltip="true"
-          /><el-table-column
-            label="简介"
-            align="center"
-            prop="intro"
-            :show-overflow-tooltip="true"
-          /><el-table-column
-            label="语言"
-            align="center"
-            prop="language"
-            :show-overflow-tooltip="true"
-          /><el-table-column
-            label="价格"
-            align="center"
-            prop="price"
-            :show-overflow-tooltip="true"
-          /><el-table-column
-            label="出版日期"
-            align="center"
-            prop="pubdate"
-            :show-overflow-tooltip="true"
-          /><el-table-column
-            label="库存"
-            align="center"
-            prop="count"
-            :show-overflow-tooltip="true"
-          /><el-table-column
-            label="书籍类别"
-            align="center"
-            prop="cid"
-            :formatter="cidFormat"
+            prop="gender"
+            :formatter="genderFormat"
             width="100"
           >
             <template slot-scope="scope">
-              {{ cidFormat(scope.row) }}
-            </template>
-          </el-table-column>
+              {{ genderFormat(scope.row) }}
+            </template> </el-table-column><el-table-column
+            label="手机号"
+            align="center"
+            prop="phone"
+            :show-overflow-tooltip="true"
+          /><el-table-column
+            label="可借阅数量"
+            align="center"
+            prop="count"
+            :show-overflow-tooltip="true"
+          />
           <el-table-column
             label="操作"
             align="center"
@@ -139,7 +119,7 @@
               >
                 <el-button
                   slot="reference"
-                  v-permisaction="['admin:book:edit']"
+                  v-permisaction="['admin:render:edit']"
                   size="mini"
                   type="text"
                   icon="el-icon-edit"
@@ -154,7 +134,7 @@
               >
                 <el-button
                   slot="reference"
-                  v-permisaction="['admin:book:remove']"
+                  v-permisaction="['admin:render:remove']"
                   size="mini"
                   type="text"
                   icon="el-icon-delete"
@@ -175,46 +155,31 @@
 
         <!-- 添加或修改对话框 -->
         <el-dialog :title="title" :visible.sync="open" width="500px">
-          <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-            <el-form-item label="图书名称" prop="name">
-              <el-input v-model="form.name" placeholder="图书名称" />
+          <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+            <el-form-item label="读者编号" prop="renderId">
+              <el-input v-model="form.renderId" placeholder="读者编号" />
             </el-form-item>
-            <el-form-item label="作者" prop="author">
-              <el-input v-model="form.author" placeholder="作者" />
+            <el-form-item label="读者用户名" prop="name">
+              <el-input v-model="form.name" placeholder="读者用户名" />
             </el-form-item>
-            <el-form-item label="出版社" prop="publish">
-              <el-input v-model="form.publish" placeholder="出版社" />
+            <el-form-item label="密码" prop="password">
+              <el-input v-model="form.password" placeholder="密码" />
             </el-form-item>
-            <el-form-item label="ISBN" prop="isbn">
-              <el-input v-model="form.isbn" placeholder="ISBN" />
-            </el-form-item>
-            <el-form-item label="简介" prop="intro">
-              <el-input v-model="form.intro" placeholder="简介" />
-            </el-form-item>
-            <el-form-item label="语言" prop="language">
-              <el-select v-model="form.language" placeholder="语言">
-                <el-option label="中文" value="中文" />
-                <el-option label="英文" value="英文" />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="价格" prop="price">
-              <el-input v-model="form.price" placeholder="价格" />
-            </el-form-item>
-            <el-form-item label="出版日期" prop="pubdate">
-              <el-input v-model="form.pubdate" placeholder="出版日期" />
-            </el-form-item>
-            <el-form-item label="库存" prop="count">
-              <el-input v-model="form.count" placeholder="库存" />
-            </el-form-item>
-            <el-form-item label="书籍类别" prop="cid">
-              <el-select v-model="form.cid" placeholder="请选择">
+            <el-form-item label="性别" prop="gender">
+              <el-select v-model="form.gender" placeholder="请选择">
                 <el-option
-                  v-for="dict in cidOptions"
-                  :key="dict.key"
-                  :label="dict.value"
-                  :value="dict.key"
+                  v-for="dict in genderOptions"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
                 />
               </el-select>
+            </el-form-item>
+            <el-form-item label="手机号" prop="phone">
+              <el-input v-model="form.phone" placeholder="手机号" />
+            </el-form-item>
+            <el-form-item label="可借阅数量" prop="count">
+              <el-input v-model="form.count" placeholder="可借阅数量" />
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -229,16 +194,15 @@
 
 <script>
 import {
-  addBook,
-  delBook,
-  getBook,
-  listBook,
-  updateBook
-} from '@/api/admin/book'
+  addRender,
+  delRender,
+  getRender,
+  listRender,
+  updateRender
+} from '@/api/admin/render'
 
-import { listBookClass } from '@/api/admin/book-class'
 export default {
-  name: 'Book',
+  name: 'Render',
   components: {},
   data() {
     return {
@@ -259,42 +223,49 @@ export default {
       isEdit: false,
       // 类型数据字典
       typeOptions: [],
-      bookList: [],
-
+      renderList: [],
+      genderOptions: [],
       // 关系表类型
-      cidOptions: [],
 
       // 查询参数
       queryParams: {
         pageIndex: 1,
         pageSize: 10,
         name: undefined,
-        cid: undefined
+        gender: undefined,
+        phone: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         name: [
-          { required: true, message: '图书名称不能为空', trigger: 'blur' }
+          { required: true, message: '读者用户名不能为空', trigger: 'blur' }
         ],
-        cid: [
-          { required: true, message: '书籍类别id不能为空', trigger: 'blur' }
-        ]
+        gender: [{ required: true, message: '性别不能为空', trigger: 'blur' }],
+        renderId: [
+          { required: true, message: '读者编号不能为空', trigger: 'blur' }
+        ],
+        count: [
+          { required: true, message: '可借阅数量不能为空', trigger: 'blur' }
+        ],
+        phone: [{ required: true, message: '手机号不能为空', trigger: 'blur' }]
       }
     }
   },
   created() {
     this.getList()
-    this.getBookClassItems()
+    this.getDicts('sys_user_sex').then((response) => {
+      this.genderOptions = response.data
+    })
   },
   methods: {
     /** 查询参数列表 */
     getList() {
       this.loading = true
-      listBook(this.addDateRange(this.queryParams, this.dateRange)).then(
+      listRender(this.addDateRange(this.queryParams, this.dateRange)).then(
         (response) => {
-          this.bookList = response.data.list
+          this.renderList = response.data.list
           this.total = response.data.count
           this.loading = false
         }
@@ -309,16 +280,12 @@ export default {
     reset() {
       this.form = {
         id: undefined,
+        renderId: undefined,
         name: undefined,
-        author: undefined,
-        publish: undefined,
-        isbn: undefined,
-        intro: undefined,
-        language: undefined,
-        price: undefined,
-        pubdate: undefined,
-        count: undefined,
-        cid: undefined
+        password: undefined,
+        gender: undefined,
+        phone: undefined,
+        count: undefined
       }
       this.resetForm('form')
     },
@@ -328,16 +295,10 @@ export default {
     fileClose: function() {
       this.fileOpen = false
     },
-    cidFormat(row) {
-      return this.selectItemsLabel(this.cidOptions, row.cid)
+    genderFormat(row) {
+      return this.selectDictLabel(this.genderOptions, row.gender)
     },
     // 关系
-    getBookClassItems() {
-      this.getItems(listBookClass, undefined).then((res) => {
-        this.cidOptions = this.setItems(res, 'id', 'name')
-        console.log(this.cidOptions)
-      })
-    },
     // 文件
     /** 搜索按钮操作 */
     handleQuery() {
@@ -354,7 +315,7 @@ export default {
     handleAdd() {
       this.reset()
       this.open = true
-      this.title = '添加Book'
+      this.title = '添加读者'
       this.isEdit = false
     },
     // 多选框选中数据
@@ -367,10 +328,10 @@ export default {
     handleUpdate(row) {
       this.reset()
       const id = row.id || this.ids
-      getBook(id).then((response) => {
+      getRender(id).then((response) => {
         this.form = response.data
         this.open = true
-        this.title = '修改Book'
+        this.title = '修改读者'
         this.isEdit = true
       })
     },
@@ -379,7 +340,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (this.form.id !== undefined) {
-            updateBook(this.form).then((response) => {
+            updateRender(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess(response.msg)
                 this.open = false
@@ -389,7 +350,7 @@ export default {
               }
             })
           } else {
-            addBook(this.form).then((response) => {
+            addRender(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess(response.msg)
                 this.open = false
@@ -412,7 +373,7 @@ export default {
         type: 'warning'
       })
         .then(function() {
-          return delBook({ ids: Ids })
+          return delRender({ ids: Ids })
         })
         .then((response) => {
           if (response.code === 200) {

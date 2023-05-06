@@ -24,7 +24,11 @@
     <div class="login-weaper animated bounceInDown">
       <div class="login-left">
         <div class="login-time" v-text="currentTime" />
-        <img :src="sysInfo.sys_app_logo" alt="" class="img">
+        <img
+          src="https://img.ixintu.com/upload/jpg/20210612/99c968e1883d1dd7957e28787ba53528_14566_512_512.jpg!ys"
+          alt=""
+          class="img"
+        >
         <p class="title" v-text="sysInfo.sys_app_name" />
       </div>
       <div class="login-border">
@@ -138,7 +142,11 @@
       </div>
     </div>
 
-    <el-dialog title="Or connect with" :visible.sync="showDialog" :close-on-click-modal="false">
+    <el-dialog
+      title="Or connect with"
+      :visible.sync="showDialog"
+      :close-on-click-modal="false"
+    >
       Can not be simulated on local, so please combine you own business
       simulation! ! !
       <br>
@@ -152,9 +160,12 @@
       style="visibility: visible; width: 100%"
     >
       <div class="s-bottom-layer-content">
-
         <div class="lh">
-          <a class="text-color" href="https://beian.miit.gov.cn" target="_blank">
+          <a
+            class="text-color"
+            href="https://beian.miit.gov.cn"
+            target="_blank"
+          >
             沪ICP备XXXXXXXXX号-1
           </a>
         </div>
@@ -207,9 +218,7 @@ export default {
         password: [
           { required: true, trigger: 'blur', message: '密码不能为空' }
         ],
-        code: [
-          { required: true, trigger: 'change', message: '验证码不能为空' }
-        ]
+        code: [{ required: true, trigger: 'change', message: '验证码不能为空' }]
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -472,7 +481,7 @@ $cursor: #fff;
   width: 100%;
   height: 100%;
   margin: 0 auto;
-  background: url("../../assets/login.png") no-repeat;
+  background: url('../../assets/login.png') no-repeat;
   background-color: #0e6cff;
   position: relative;
   background-size: cover;

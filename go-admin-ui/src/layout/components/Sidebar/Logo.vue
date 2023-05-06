@@ -1,20 +1,60 @@
 <template>
-  <div class="sidebar-logo-container" :class="{'collapse':collapse}" :style="{ backgroundColor: $store.state.settings.themeStyle === 'dark' ? variables.menuBg : variables.menuLightBg }">
+  <div
+    class="sidebar-logo-container"
+    :class="{ collapse: collapse }"
+    :style="{
+      backgroundColor:
+        $store.state.settings.themeStyle === 'dark'
+          ? variables.menuBg
+          : variables.menuLightBg
+    }"
+  >
     <transition name="sidebarLogoFade">
-      <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="appInfo.sys_app_logo" :src="appInfo.sys_app_logo" class="sidebar-logo">
-        <h1 v-else class="sidebar-title" :style="{ color: $store.state.settings.themeStyle === 'dark' ? variables.sidebarTitle : variables.sidebarLightTitle }">{{ appInfo.sys_app_name }} </h1>
+      <router-link
+        v-if="collapse"
+        key="collapse"
+        class="sidebar-logo-link"
+        to="/"
+      >
+        <img
+          src="https://img.ixintu.com/upload/jpg/20210612/99c968e1883d1dd7957e28787ba53528_14566_512_512.jpg!ys"
+          class="sidebar-logo"
+        >
+        <!-- <h1
+          v-else
+          class="sidebar-title"
+          :style="{
+            color:
+              $store.state.settings.themeStyle === 'dark'
+                ? variables.sidebarTitle
+                : variables.sidebarLightTitle
+          }"
+        >
+          {{ appInfo.sys_app_name }}
+        </h1> -->
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="appInfo.sys_app_logo" :src="appInfo.sys_app_logo" class="sidebar-logo">
-        <h1 class="sidebar-title" :style="{ color: $store.state.settings.themeStyle === 'dark' ? variables.sidebarTitle : variables.sidebarLightTitle }">{{ appInfo.sys_app_name }} </h1>
+        <img
+          src="https://img.ixintu.com/upload/jpg/20210612/99c968e1883d1dd7957e28787ba53528_14566_512_512.jpg!ys"
+          class="sidebar-logo"
+        >
+        <h1
+          class="sidebar-title"
+          :style="{
+            color:
+              $store.state.settings.themeStyle === 'dark'
+                ? variables.sidebarTitle
+                : variables.sidebarLightTitle
+          }"
+        >
+          {{ appInfo.sys_app_name }}
+        </h1>
       </router-link>
     </transition>
   </div>
 </template>
 
 <script>
-
 import variables from '@/styles/variables.scss'
 import { mapGetters } from 'vuex'
 
@@ -27,9 +67,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'appInfo'
-    ]),
+    ...mapGetters(['appInfo']),
     variables() {
       return variables
     }

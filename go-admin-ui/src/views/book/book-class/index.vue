@@ -188,7 +188,7 @@ export default {
     handleAdd() {
       this.reset()
       this.open = true
-      this.title = '添加BookClass'
+      this.title = '添加图书类别'
       this.isEdit = false
     },
     // 多选框选中数据
@@ -204,7 +204,7 @@ export default {
       getBookClass(id).then((response) => {
         this.form = response.data
         this.open = true
-        this.title = '修改BookClass'
+        this.title = '修改图书类别'
         this.isEdit = true
       })
     },

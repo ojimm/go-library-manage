@@ -8,7 +8,7 @@
           :inline="true"
           label-width="68px"
         >
-          <el-form-item
+          <!-- <el-form-item
             label="读者"
             prop="renderId"
           ><el-select
@@ -25,7 +25,7 @@
               :value="dict.key"
             />
           </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item
             label="图书"
             prop="bookId"
@@ -160,6 +160,13 @@
                 >{{ scope.row.state == '1' ? '已归还' : '确认归还' }}
                 </el-button>
               </el-popconfirm>
+
+              <!-- <span
+                v-if="scope.row.state == '1'"
+                style="color: green"
+              >已归还</span>
+              <span v-else style="color: red">未归还</span> -->
+
               <!-- <el-popconfirm
                 class="delete-popconfirm"
                 title="确认要删除吗?"
@@ -214,7 +221,7 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="借阅日期" prop="lendDate">
+            <!-- <el-form-item label="借阅日期" prop="lendDate">
               <el-date-picker
                 v-model="form.lendDate"
                 type="date"
@@ -229,7 +236,7 @@
                 value-format="yyyy-MM-dd HH:mm:ss"
                 placeholder="最后归还日期"
               />
-            </el-form-item>
+            </el-form-item> -->
             <!-- <el-form-item label="状态" prop="state">
               <el-select v-model="form.state" placeholder="请选择">
                 <el-option
@@ -259,6 +266,7 @@ import {
   listLend,
   updateLend
 } from '@/api/admin/lend'
+import moment from 'moment'
 
 import { listRender } from '@/api/admin/render'
 import { listBook } from '@/api/admin/book'
@@ -303,18 +311,16 @@ export default {
       // 表单校验
       rules: {
         renderId: [
-          { required: true, message: '读者id不能为空', trigger: 'blur' }
+          { required: true, message: '读者不能为空', trigger: 'blur' }
         ],
-        bookId: [
-          { required: true, message: '图书id不能为空', trigger: 'blur' }
-        ],
-        lendDate: [
-          { required: true, message: '借阅日期不能为空', trigger: 'blur' }
-        ],
-        backDate: [
-          { required: true, message: '归还日期不能为空', trigger: 'blur' }
-        ],
-        state: [{ required: true, message: '状态不能为空', trigger: 'blur' }]
+        bookId: [{ required: true, message: '图书不能为空', trigger: 'blur' }]
+        // lendDate: [
+        //   { required: true, message: '借阅日期不能为空', trigger: 'blur' }
+        // ],
+        // backDate: [
+        //   { required: true, message: '归还日期不能为空', trigger: 'blur' }
+        // ],
+        // state: [{ required: true, message: '状态不能为空', trigger: 'blur' }]
       }
     }
   },
@@ -411,7 +417,7 @@ export default {
       })
     },
     changeState(id) {
-      updateLend({ id, state: '1' }).then((response) => {
+      updateLend({ id, state: 1 }).then((response) => {
         if (response.code === 200) {
           this.msgSuccess('归还成功')
           this.open = false
@@ -436,7 +442,12 @@ export default {
               }
             })
           } else {
-            addLend({ ...this.form, state: '0' }).then((response) => {
+            addLend({
+              ...this.form,
+              state: 0,
+              lendDate: moment().format('yyyy-MM-DD HH:mm:ss'),
+              backDate: moment().add(20, 'day').format('yyyy-MM-DD HH:mm:ss')
+            }).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess(response.msg)
                 this.open = false

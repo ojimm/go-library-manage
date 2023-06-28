@@ -89,7 +89,7 @@
                 </span>
               </el-form-item>
             </el-tooltip>
-            <el-form-item prop="code" style="width: 66%; float: left">
+            <!-- <el-form-item prop="code" style="width: 66%; float: left">
               <span class="svg-container">
                 <svg-icon icon-class="validCode" />
               </span>
@@ -105,8 +105,8 @@
                 style="width: 75%"
                 @keyup.enter.native="handleLogin"
               />
-            </el-form-item>
-            <div
+            </el-form-item> -->
+            <!-- <div
               class="login-code"
               style="
                 cursor: pointer;
@@ -126,7 +126,7 @@
                 :src="codeUrl"
                 @click="getCode"
               >
-            </div>
+            </div> -->
 
             <el-button
               :loading="loading"
@@ -208,7 +208,7 @@ export default {
         username: 'admin',
         password: '123456',
         rememberMe: false,
-        code: '',
+        code: '1111',
         uuid: ''
       },
       loginRules: {

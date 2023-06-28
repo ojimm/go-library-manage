@@ -42,76 +42,85 @@ const actions = {
   // user login
   login({ commit }, userInfo) {
     return new Promise((resolve, reject) => {
-      login(userInfo).then(response => {
-        const { token } = response
-        commit('SET_TOKEN', token)
-        setToken(token)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      login(userInfo)
+        .then((response) => {
+          const { token } = response
+          commit('SET_TOKEN', token)
+          setToken(token)
+          resolve()
+        })
+        .catch((error) => {
+          reject(error)
+        })
     })
   },
 
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo().then(response => {
-        if (!response || !response.data) {
-          commit('SET_TOKEN', '')
-          removeToken()
-          resolve()
-        }
+      getInfo()
+        .then((response) => {
+          if (!response || !response.data) {
+            commit('SET_TOKEN', '')
+            removeToken()
+            resolve()
+          }
 
-        const { roles, name, avatar, introduction, permissions } = response.data
+          const { roles, name, avatar, introduction, permissions } =
+            response.data
 
-        // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
-        }
-        commit('SET_PERMISSIONS', permissions)
-        commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
-        resolve(response)
-      }).catch(error => {
-        reject(error)
-      })
+          // roles must be a non-empty array
+          if (!roles || roles.length <= 0) {
+            reject('getInfo: roles must be a non-null array!')
+          }
+          commit('SET_PERMISSIONS', permissions)
+          commit('SET_ROLES', roles)
+          commit('SET_NAME', name)
+          commit('SET_AVATAR', avatar)
+          commit('SET_INTRODUCTION', introduction)
+          resolve(response)
+        })
+        .catch((error) => {
+          reject(error)
+        })
     })
   },
   // 退出系统
   LogOut({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        commit('SET_TOKEN', '')
-        commit('SET_ROLES', [])
-        commit('SET_PERMISSIONS', [])
-        removeToken()
-        storage.clear()
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      logout(state.token)
+        .then(() => {
+          commit('SET_TOKEN', '')
+          commit('SET_ROLES', [])
+          commit('SET_PERMISSIONS', [])
+          removeToken()
+          storage.clear()
+          resolve()
+        })
+        .catch((error) => {
+          reject(error)
+        })
     })
   },
   // 刷新token
   refreshToken({ commit, state }) {
     return new Promise((resolve, reject) => {
-      refreshtoken({ token: state.token }).then(response => {
-        const { token } = response
-        commit('SET_TOKEN', token)
-        setToken(token)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      refreshtoken({ token: state.token })
+        .then((response) => {
+          const { token } = response
+          commit('SET_TOKEN', token)
+          setToken(token)
+          resolve()
+        })
+        .catch((error) => {
+          reject(error)
+        })
     })
   },
 
   // remove token
   resetToken({ commit }) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       commit('SET_TOKEN', '')
       removeToken()
       resolve()
@@ -121,7 +130,7 @@ const actions = {
   // dynamically modify permissions
   changeRoles({ commit, dispatch }, role) {
     // eslint-disable-next-line no-async-promise-executor
-    return new Promise(async resolve => {
+    return new Promise(async(resolve) => {
       const token = role + '-token'
 
       commit('SET_TOKEN', token)
@@ -132,7 +141,9 @@ const actions = {
       resetRouter()
 
       // generate accessible routes map based on roles
-      const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
+      const accessRoutes = await dispatch('permission/generateRoutes', roles, {
+        root: true
+      })
 
       // dynamically add accessible routes
       router.addRoutes(accessRoutes)

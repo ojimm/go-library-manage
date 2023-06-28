@@ -15,7 +15,7 @@ type Book struct {
 	Language string `json:"language" gorm:"type:varchar(255);comment:语言"`
 	Price    string `json:"price" gorm:"type:double;comment:价格"`
 	Pubdate  string `json:"pubdate" gorm:"type:varchar(255);comment:出版日期"`
-	Count    string `json:"count" gorm:"type:int(11);comment:库存"`
+	Count    int    `json:"count" gorm:"type:int(11);comment:库存"`
 	Cid      string `json:"cid" gorm:"type:int(11);comment:书籍类别id"`
 	models.ModelTime
 	models.ControlBy

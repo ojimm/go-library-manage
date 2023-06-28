@@ -46,7 +46,7 @@ type BookInsertReq struct {
 	Language string `json:"language" comment:"语言"`
 	Price    string `json:"price" comment:"价格"`
 	Pubdate  string `json:"pubdate" comment:"出版日期"`
-	Count    string `json:"count" comment:"库存"`
+	Count    int    `json:"count" comment:"库存"`
 	Cid      string `json:"cid" comment:"书籍类别id"`
 	common.ControlBy
 }
@@ -82,7 +82,7 @@ type BookUpdateReq struct {
 	Language string `json:"language" comment:"语言"`
 	Price    string `json:"price" comment:"价格"`
 	Pubdate  string `json:"pubdate" comment:"出版日期"`
-	Count    string `json:"count" comment:"库存"`
+	Count    int    `json:"count" comment:"库存"`
 	Cid      string `json:"cid" comment:"书籍类别id"`
 	common.ControlBy
 }

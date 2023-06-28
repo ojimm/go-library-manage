@@ -179,7 +179,11 @@
               <el-input v-model="form.phone" placeholder="手机号" />
             </el-form-item>
             <el-form-item label="可借阅数量" prop="count">
-              <el-input v-model="form.count" placeholder="可借阅数量" />
+              <el-input-number
+                v-model="form.count"
+                :min="1"
+                label="可借阅数量"
+              />
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -285,7 +289,7 @@ export default {
         password: undefined,
         gender: undefined,
         phone: undefined,
-        count: undefined
+        count: 1
       }
       this.resetForm('form')
     },

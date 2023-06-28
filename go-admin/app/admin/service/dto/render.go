@@ -21,7 +21,7 @@ type RenderOrder struct {
 	Password  string `form:"passwordOrder"  search:"type:order;column:password;table:render"`
 	Gender    string `form:"genderOrder"  search:"type:order;column:gender;table:render"`
 	Phone     string `form:"phoneOrder"  search:"type:order;column:phone;table:render"`
-	Count     string `form:"countOrder"  search:"type:order;column:count;table:render"`
+	Count     int    `form:"countOrder"  search:"type:order;column:count;table:render"`
 	CreatedAt string `form:"createdAtOrder"  search:"type:order;column:created_at;table:render"`
 	UpdatedAt string `form:"updatedAtOrder"  search:"type:order;column:updated_at;table:render"`
 	DeletedAt string `form:"deletedAtOrder"  search:"type:order;column:deleted_at;table:render"`
@@ -40,7 +40,7 @@ type RenderInsertReq struct {
 	Password string `json:"password" comment:"密码"`
 	Gender   string `json:"gender" comment:"性别"`
 	Phone    string `json:"phone" comment:"手机号"`
-	Count    string `json:"count" comment:"可借阅数量"`
+	Count    int    `json:"count" comment:"可借阅数量"`
 	common.ControlBy
 }
 
@@ -68,7 +68,7 @@ type RenderUpdateReq struct {
 	Password string `json:"password" comment:"密码"`
 	Gender   string `json:"gender" comment:"性别"`
 	Phone    string `json:"phone" comment:"手机号"`
-	Count    string `json:"count" comment:"可借阅数量"`
+	Count    int    `json:"count" comment:"可借阅数量"`
 	common.ControlBy
 }
 

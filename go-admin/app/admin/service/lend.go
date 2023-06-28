@@ -61,13 +61,43 @@ func (e *Lend) Get(d *dto.LendGetReq, p *actions.DataPermission, model *models.L
 func (e *Lend) Insert(c *dto.LendInsertReq) error {
 	var err error
 	var data models.Lend
-	c.Fine = "0"
+	var data2 models.Lend
+	var render models.Render
+	var book models.Book
+
+	e.Orm.Where("book_id = ?", c.BookId).Where("render_id = ?", c.RenderId).Where("render_id = ?", c.RenderId).Where("state = ?", 0).First(&data2)
+	e.Orm.Where("id = ?", c.RenderId).First(&render)
+	e.Orm.Where("id = ?", c.BookId).First(&book)
+
+	if data2.Id != 0 {
+		err = errors.New("此书还未归还")
+		e.Log.Errorf("LendService Insert error:%s \r\n", err)
+		return err
+	}
+
+	if render.Count == 0 {
+		err = errors.New("读者借阅数不足")
+		e.Log.Errorf("LendService Insert error:%s \r\n", err)
+		return err
+	}
+
+	if book.Count == 0 {
+		err = errors.New("书籍库存不足了")
+		e.Log.Errorf("LendService Insert error:%s \r\n", err)
+		return err
+	}
+
+	render.Count = render.Count - 1
+	book.Count = book.Count - 1
+
 	c.Generate(&data)
 	err = e.Orm.Create(&data).Error
 	if err != nil {
 		e.Log.Errorf("LendService Insert error:%s \r\n", err)
 		return err
 	}
+	e.Orm.Save(&render)
+	e.Orm.Save(&book)
 	return nil
 }
 
@@ -75,12 +105,21 @@ func (e *Lend) Insert(c *dto.LendInsertReq) error {
 func (e *Lend) Update(c *dto.LendUpdateReq, p *actions.DataPermission) error {
 	var err error
 	var data = models.Lend{}
+	var render models.Render
+	var book models.Book
+
 	e.Orm.Scopes(
 		actions.Permission(data.TableName(), p),
 	).First(&data, c.GetId())
+
+	e.Orm.Where("id = ?", data.RenderId).First(&render)
+	e.Orm.Where("id = ?", data.BookId).First(&book)
+
 	c.Generate(&data)
 
 	db := e.Orm.Save(&data)
+	render.Count = render.Count + 1
+	book.Count = book.Count + 1
 	if err = db.Error; err != nil {
 		e.Log.Errorf("LendService Save error:%s \r\n", err)
 		return err
@@ -88,6 +127,8 @@ func (e *Lend) Update(c *dto.LendUpdateReq, p *actions.DataPermission) error {
 	if db.RowsAffected == 0 {
 		return errors.New("无权更新该数据")
 	}
+	e.Orm.Save(&render)
+	e.Orm.Save(&book)
 	return nil
 }
 

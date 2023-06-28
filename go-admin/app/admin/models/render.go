@@ -12,7 +12,7 @@ type Render struct {
 	Password string `json:"password" gorm:"type:varchar(255);comment:密码"`
 	Gender   string `json:"gender" gorm:"type:varchar(255);comment:性别"`
 	Phone    string `json:"phone" gorm:"type:varchar(11);comment:手机号"`
-	Count    string `json:"count" gorm:"type:int(11);comment:可借阅数量"`
+	Count    int    `json:"count" gorm:"type:int(11);comment:可借阅数量"`
 	models.ModelTime
 	models.ControlBy
 }

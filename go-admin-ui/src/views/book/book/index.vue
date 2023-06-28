@@ -74,7 +74,19 @@
             align="center"
             prop="name"
             :show-overflow-tooltip="true"
-          /><el-table-column
+          />
+          <el-table-column
+            label="书籍类别"
+            align="center"
+            prop="cid"
+            :formatter="cidFormat"
+            width="100"
+          >
+            <template slot-scope="scope">
+              {{ cidFormat(scope.row) }}
+            </template>
+          </el-table-column>
+          <el-table-column
             label="作者"
             align="center"
             prop="author"
@@ -114,17 +126,7 @@
             align="center"
             prop="count"
             :show-overflow-tooltip="true"
-          /><el-table-column
-            label="书籍类别"
-            align="center"
-            prop="cid"
-            :formatter="cidFormat"
-            width="100"
-          >
-            <template slot-scope="scope">
-              {{ cidFormat(scope.row) }}
-            </template>
-          </el-table-column>
+          />
           <el-table-column
             label="操作"
             align="center"
@@ -179,6 +181,16 @@
             <el-form-item label="图书名称" prop="name">
               <el-input v-model="form.name" placeholder="图书名称" />
             </el-form-item>
+            <el-form-item label="书籍类别" prop="cid">
+              <el-select v-model="form.cid" placeholder="请选择">
+                <el-option
+                  v-for="dict in cidOptions"
+                  :key="dict.key"
+                  :label="dict.value"
+                  :value="dict.key"
+                />
+              </el-select>
+            </el-form-item>
             <el-form-item label="作者" prop="author">
               <el-input v-model="form.author" placeholder="作者" />
             </el-form-item>
@@ -187,9 +199,6 @@
             </el-form-item>
             <el-form-item label="ISBN" prop="isbn">
               <el-input v-model="form.isbn" placeholder="ISBN" />
-            </el-form-item>
-            <el-form-item label="简介" prop="intro">
-              <el-input v-model="form.intro" placeholder="简介" />
             </el-form-item>
             <el-form-item label="语言" prop="language">
               <el-select v-model="form.language" placeholder="语言">
@@ -204,17 +213,14 @@
               <el-input v-model="form.pubdate" placeholder="出版日期" />
             </el-form-item>
             <el-form-item label="库存" prop="count">
-              <el-input v-model="form.count" placeholder="库存" />
+              <el-input-number v-model="form.count" :min="1" label="库存" />
             </el-form-item>
-            <el-form-item label="书籍类别" prop="cid">
-              <el-select v-model="form.cid" placeholder="请选择">
-                <el-option
-                  v-for="dict in cidOptions"
-                  :key="dict.key"
-                  :label="dict.value"
-                  :value="dict.key"
-                />
-              </el-select>
+            <el-form-item label="简介" prop="intro">
+              <el-input
+                v-model="form.intro"
+                type="textarea"
+                placeholder="简介"
+              />
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -317,7 +323,7 @@ export default {
         language: undefined,
         price: undefined,
         pubdate: undefined,
-        count: undefined,
+        count: 1,
         cid: undefined
       }
       this.resetForm('form')
@@ -354,7 +360,7 @@ export default {
     handleAdd() {
       this.reset()
       this.open = true
-      this.title = '添加Book'
+      this.title = '添加图书'
       this.isEdit = false
     },
     // 多选框选中数据
@@ -370,7 +376,7 @@ export default {
       getBook(id).then((response) => {
         this.form = response.data
         this.open = true
-        this.title = '修改Book'
+        this.title = '修改图书'
         this.isEdit = true
       })
     },

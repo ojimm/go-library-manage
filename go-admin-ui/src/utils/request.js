@@ -12,7 +12,7 @@ const service = axios.create({
 
 // request interceptor
 service.interceptors.request.use(
-  config => {
+  (config) => {
     // do something before request is sent
 
     if (store.getters.token) {
@@ -24,7 +24,7 @@ service.interceptors.request.use(
     }
     return config
   },
-  error => {
+  (error) => {
     // do something with request error
     console.log(error) // for debug
     return Promise.reject(error)
@@ -36,14 +36,14 @@ service.interceptors.response.use(
   /**
    * If you want to get http information such as headers or status
    * Please return  response => response
-  */
+   */
 
   /**
    * Determine the request status by custom code
    * Here is just an example
    * You can also judge the status by HTTP Status Code
    */
-  response => {
+  (response) => {
     const code = response.data.code
     if (code === 401) {
       store.dispatch('user/resetToken')
@@ -95,7 +95,7 @@ service.interceptors.response.use(
       return response.data
     }
   },
-  error => {
+  (error) => {
     if (error.message === 'Network Error') {
       Message({
         message: '服务器连接异常，请检查服务器！',

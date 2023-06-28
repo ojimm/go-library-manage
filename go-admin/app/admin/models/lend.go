@@ -11,8 +11,8 @@ type Lend struct {
 	BookId   string `json:"bookId" gorm:"type:int(11);comment:图书id"`
 	LendDate string `json:"lendDate" gorm:"type:varchar(255);comment:借阅日期"`
 	BackDate string `json:"backDate" gorm:"type:varchar(255);comment:最后归还日期"`
-	State    string `json:"state" gorm:"type:int(11);comment:状态"`
-	Fine     string `json:"fine" gorm:"type:double;comment:罚款"`
+	State    int    `json:"state" gorm:"type:int(11);comment:状态"`
+	// Fine     string `json:"fine" gorm:"type:double;comment:罚款"`
 	models.ModelTime
 	models.ControlBy
 }

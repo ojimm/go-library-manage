@@ -39,8 +39,8 @@ type LendInsertReq struct {
 	BookId   string `json:"bookId" comment:"图书id"`
 	LendDate string `json:"lendDate" comment:"借阅日期"`
 	BackDate string `json:"backDate" comment:"最后归还日期"`
-	State    string `json:"state" comment:"状态"`
-	Fine     string `json:"fine" comment:"罚款"`
+	State    int    `json:"state" comment:"状态"`
+	// Fine     string `json:"fine" comment:"罚款"`
 	common.ControlBy
 }
 
@@ -53,7 +53,7 @@ func (s *LendInsertReq) Generate(model *models.Lend) {
 	model.LendDate = s.LendDate
 	model.BackDate = s.BackDate
 	model.State = s.State
-	model.Fine = s.Fine
+	// model.Fine = s.Fine
 	model.CreateBy = s.CreateBy // 添加这而，需要记录是被谁创建的
 }
 
@@ -67,7 +67,7 @@ type LendUpdateReq struct {
 	// BookId   string `json:"bookId" comment:"图书id"`
 	// LendDate string `json:"lendDate" comment:"借阅日期"`
 	// BackDate string `json:"backDate" comment:"最后归还日期"`
-	State string `json:"state" comment:"状态"`
+	State int `json:"state" comment:"状态"`
 	// Fine     string `json:"fine" comment:"罚款"`
 	common.ControlBy
 }
